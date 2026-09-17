@@ -11,7 +11,7 @@ type PoetPageProps = {
 
 export default async function PoetShelfPage({ params }: PoetPageProps) {
   const { poetId } = await params;
-  const shelf = findCatalogPoet(loadCompiledCatalog(), poetId);
+  const shelf = findCatalogPoet(await loadCompiledCatalog(), poetId);
   if (!shelf) {
     notFound();
   }
