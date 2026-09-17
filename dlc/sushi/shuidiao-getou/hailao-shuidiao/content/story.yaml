@@ -1,0 +1,113 @@
+schemaVersion: 1
+chapters:
+  - chapter: 1
+    background: assets/backgrounds/chapter-1-brothers.webp
+  - chapter: 2
+    background: assets/backgrounds/chapter-2-reform-debate.webp
+  - chapter: 3
+    background: assets/backgrounds/chapter-3-mid-autumn.webp
+nodes:
+  - id: ch1_open
+    type: narration
+    chapter: 1
+    chapterTitle: 苏轼与苏辙
+    text: 你忽然发现自己变成了苏轼。身边最亲的人，是弟弟苏辙。你们从小一起读书、一起写文章，别人常说苏家兄弟像分不开的左右手。
+    nextNodeId: ch1_choice
+  - id: ch1_choice
+    type: choice
+    chapter: 1
+    chapterTitle: 苏轼与苏辙
+    portrait: suzhe
+    convergesTo: ch2_open
+    text: 今晚月亮很圆。如果你是苏轼，想念弟弟的时候会做什么？
+    choices:
+      - id: write_letter
+        label: 先给弟弟写信，告诉他今晚的月亮
+        nextNodeId: ch1_a
+        feedback: 信很慢，但你还是想把心里的话写下来。
+      - id: remember_childhood
+        label: 先回忆小时候一起读书的日子
+        nextNodeId: ch1_b
+        feedback: 旧时光一下子涌上来，弟弟的声音仿佛还在耳边。
+  - id: ch1_a
+    type: narration
+    chapter: 1
+    chapterTitle: 苏轼与苏辙
+    text: 你铺开纸，却不知道这封信要走多久。你们不在同一个地方做官，见面比写信难得多。
+    nextNodeId: ch2_open
+  - id: ch1_b
+    type: narration
+    chapter: 1
+    chapterTitle: 苏轼与苏辙
+    text: 你想起小时候，弟弟总爱追着你问字、问诗。后来他的文章也很出色，你们互相鼓励，也互相想念。
+    nextNodeId: ch2_open
+  - id: ch2_open
+    type: narration
+    chapter: 2
+    chapterTitle: 变法与外放
+    text: 你俩之所以天各一方，是因为之前京城的一件大事...
+    nextNodeId: ch2_fact_reform
+  - id: ch2_fact_reform
+    type: fact
+    chapter: 2
+    chapterTitle: 变法与外放
+    heading: 王安石变法是什么
+    text: 那时宋朝正在推行「王安石变法」。王安石希望朝廷更有钱、军队更强，于是改税法、改役法，让地方把更多粮食、钱和人力交给中央。支持的人觉得这是在救国家；担心的人觉得改得太急，百姓一下子不适应。
+    nextNodeId: ch2_choice
+  - id: ch2_choice
+    type: choice
+    chapter: 2
+    chapterTitle: 变法与外放
+    convergesTo: ch3_open
+    text: 待你书写
+    choices:
+      - id: pick_this
+        label: 选这个
+        nextNodeId: ch3_open
+      - id: skip_this
+        label: 别选这个
+        nextNodeId: ch2_over
+  - id: ch2_over
+    type: gameOver
+    chapter: 2
+    chapterTitle: 变法与外放
+    text: 告诉你别选这个
+  - id: ch3_open
+    type: narration
+    chapter: 3
+    chapterTitle: 密州中秋
+    text: 熙宁七年（1074），你调到密州。你曾经希望调到离苏辙更近的地方，好常见面。这个愿望没有实现。
+    nextNodeId: ch3_choice
+  - id: ch3_choice
+    type: choice
+    chapter: 3
+    chapterTitle: 密州中秋
+    portrait: moon
+    convergesTo: ch3_join
+    text: 熙宁九年中秋，皓月当空。你会先做什么？
+    choices:
+      - id: toast_sky
+        label: 举起酒杯，问问天上的月亮
+        nextNodeId: ch3_a
+        feedback: 酒很凉，月很亮，你把问题抛给青天。
+      - id: count_years
+        label: 默默数一数，和弟弟分别多少年了
+        nextNodeId: ch3_b
+        feedback: 你算了又算：分别，已经七年。
+  - id: ch3_a
+    type: narration
+    chapter: 3
+    chapterTitle: 密州中秋
+    text: 你问月亮：天上的宫殿今晚是哪一年？你想乘风回去，又怕高处太冷。人间虽然有别离，却还有弟弟。
+    nextNodeId: ch3_join
+  - id: ch3_b
+    type: narration
+    chapter: 3
+    chapterTitle: 密州中秋
+    text: 从分别到今晚，已经七年。密州的月光铺满地面，你知道弟弟此刻也在某处望着同一轮月。
+    nextNodeId: ch3_join
+  - id: ch3_join
+    type: narration
+    chapter: 3
+    chapterTitle: 密州中秋
+    text: 七年未见。酒杯里倒映着月亮。你决定把心里的话写成《水调歌头》。下面，请一句一句读它。

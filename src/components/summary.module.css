@@ -1,0 +1,241 @@
+.shell {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at top, #efe2c4 0%, transparent 40%),
+    #cbb58a;
+  color: #2c2416;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px 0;
+}
+
+.header h1 {
+  font-size: clamp(18px, 5.4cqw, 24px);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.kicker {
+  font-size: var(--type-kicker, 13px);
+  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+.back {
+  border: 1px solid #2c2416;
+  background: #f7efdc;
+  color: inherit;
+  padding: 6px 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  overflow: hidden;
+  border: 2px solid #2c2416;
+  background: #fbf6e8;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  overflow: auto;
+  padding: 18px 14px 12px;
+}
+
+.speaker {
+  flex: 0 0 72px;
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.portrait {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border: 1px solid rgba(44, 36, 22, 0.22);
+  background: #efe2c4;
+}
+
+.portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.speakerName {
+  font-family: var(--font-sans);
+  font-size: var(--type-kicker, 12px);
+  letter-spacing: 0.16em;
+  color: #8a5a1e;
+  font-weight: 700;
+}
+
+.slipWrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.slip {
+  position: relative;
+  padding: 14px 16px 16px 18px;
+  border: 1px solid rgba(184, 134, 11, 0.45);
+  border-left: 3px solid #b8860b;
+  background: linear-gradient(180deg, rgba(255, 248, 225, 0.85), rgba(247, 236, 210, 0.7));
+}
+
+.slip::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: -8px;
+  border-width: 6px 8px 6px 0;
+  border-style: solid;
+  border-color: transparent #f7efe3 transparent transparent;
+}
+
+.slipKicker {
+  margin-bottom: 8px;
+  color: #8a5a1e;
+  font-family: var(--font-sans);
+  font-size: var(--type-kicker, 12px);
+  letter-spacing: 0.24em;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slipKicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #b8860b;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.slipBody {
+  font-size: clamp(17px, 4.6cqi, 20px);
+  line-height: 2;
+  letter-spacing: 0.03em;
+  white-space: pre-wrap;
+  text-indent: 2em;
+}
+
+.credit {
+  flex: 0 0 auto;
+  padding: 8px 12px 12px;
+  text-align: center;
+  font-size: 13px;
+  color: #8a7b5c;
+  letter-spacing: 0.05em;
+}
+
+.authorName {
+  font-weight: 600;
+  color: #5c4a2c;
+}
+
+.resume {
+  flex: 0 0 auto;
+  align-self: stretch;
+  margin: 12px 14px 0;
+  min-height: 48px;
+  border: 1px solid #2c2416;
+  background: #2c2416;
+  color: #f7efdc;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.resume:hover {
+  background: #4a3a20;
+}
+
+.muted {
+  margin-top: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: #8a7b5c;
+  text-indent: 0;
+}
+
+.caret {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 0.9s steps(1) infinite;
+  color: #a63232;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@container game (max-width: 800px) {
+  .header {
+    padding: max(8px, env(safe-area-inset-top)) 14px 0;
+  }
+
+  .header h1 {
+    max-width: 260px;
+    font-size: var(--type-title, clamp(17px, 4.6cqw, 19px));
+  }
+
+  .back {
+    padding: 4px 10px;
+    font-size: var(--type-caption, 13px);
+  }
+
+  .stage {
+    margin: 8px 12px 12px;
+  }
+
+  .body {
+    padding: 14px 10px 10px;
+    gap: 8px;
+  }
+
+  .speaker,
+  .portrait {
+    flex-basis: 64px;
+    width: 64px;
+  }
+
+  .portrait {
+    height: 64px;
+  }
+}
