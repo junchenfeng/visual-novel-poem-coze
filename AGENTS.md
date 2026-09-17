@@ -98,3 +98,54 @@ pnpm test        # 运行 Jest 测试
 | 生图准备 | `05_storyboard.md` 分镜表 | 生成图进 DLC 包 `assets/` |
 
 开始前：查该目录下已有工作单，据已落内容判断当前进度，接着往下走，不重复劳动。再对照 `dlc/`、`src/dlc/roster.ts`、`generated/dlc/`，确认诗人与篇目是否已登记、命名与目录规范是否一致。
+
+## 平台 MCP：上传课包与拿回使用数据
+
+平台把「提交 DLC」和「拿回使用数据」放在同一台 MCP 上：`https://poem.aibeaver.cn/mcp`。这是**远程 MCP 服务，不在当前项目里、也不在本机** —— 不要去找端口、进程或脚本。远程不用 token，每个工具都靠学员自己的 `userId` 开门。
+
+**工具列表里看不到 `list_roster` / `upsert_poet` / `upsert_work` / `ingest_dlc` / `list_my_dlc` / `usage_manifest` / `download_usage_files` 时**，说明调用方还没配置这个 MCP。把下面这段交给用户，让他加进自己 agent 客户端的 MCP 配置，再重新发起请求：
+
+```json
+{ "mcpServers": { "poem-dlc-ingest": { "url": "https://poem.aibeaver.cn/mcp" } } }
+```
+
+**userId**：`hh` + 学号，或 `hh_` + 学号（`hh11016863` / `hh_11016863`，大小写不敏感）。学号须是当前在读学员。格式不对或不在名单，工具返回「user id不正确，需要咨询老师」—— 此时停下问老师，不要换别的 id 重试。
+
+每个工具调用都必须带 `userId`。管理台人工上传不走这套校验。
+
+### 1. 上传课包（poem-dlc-ingest）
+
+说明页：https://poem.aibeaver.cn/mcp-how-to
+
+- 只向用户要两样：`userId`、DLC 目录（里面有 `manifest.yaml`）。**不要让用户自己打 zip**，也不要问 poetId / 诗人中文名 / 篇名 —— 从 `manifest.yaml` 读。不要向用户要 token。
+- 工具：`list_roster`（先看诗人与篇目）→ 诗人不在名册时 `upsert_poet`（正方形 png/jpg/webp，边长 512–1024px，≤2MB，传 `portraitBase64`）→ `ingest_dlc`（zip ≤30MB，传 `zipBase64`）。
+- 打包排除 `.DS_Store`、`.git`、`node_modules`、`__MACOSX`。诗人头像是公共资源，**不要放进 zip**。
+- 审核 = 机器校验 + 对照 https://poem.aibeaver.cn/dlc-spec 的评审，可能要几分钟，别中途取消。
+- `verdict: accept` → 把返回的 `playUrl` 给用户，结束；`verdict: reject` → 按 `issues[].message` / `fixHint` 改 YAML，**你自己重新打包**再 `ingest_dlc`，不要让用户手动重压。
+- 线上课包 id 是 `{manifest.id}-{userId}`：同一 userId 同一 short-id 覆盖自己的包，不会盖到别人的，也不会盖到仓库课包。
+
+### 2. 拿回自己 DLC 的使用数据
+
+说明页：https://poem.aibeaver.cn/mcp-usage
+
+- 只向用户要 `userId`，**不要问要哪个课包** —— 先 `list_my_dlc` 列出来让他挑。
+- 工具：`list_my_dlc`（自己已上架、未被隐藏的课包 + 试玩地址）→ `usage_manifest`（使用数据清单：每个文件带相对落盘路径、字节数、更新时间、sha256）→ `download_usage_files`（按清单 `path` 取内容，一次最多 25 个）。
+- **只导出「课包归属人 = 本人」的数据**：对局记录按 `sessions`、行为事件流按 `dlcId` 逐条过滤后才输出；请求不属于清单的路径，整单拒绝。
+- 默认落到本机 `assets/user_data/`，增量更新：拿清单的 `sha256` 与本机已有文件比对，只下载缺失或变更的文件。目录约定：
+
+  ```text
+  assets/user_data/
+    manifest.json                      # 上次同步基线
+    <dlcId>/sessions/<玩家 slug>-<对局 id>.json
+    <dlcId>/events/<玩家 slug>.json
+  ```
+
+- 远程 MCP 返回 `contentBase64`，由你写盘：**保持清单里的 `path` 原样**，改文件名会让下次增量重复下载。
+- 全程 HTTPS，**没有本地脚本可用**：远程 MCP `https://poem.aibeaver.cn/mcp`，或同源 HTTP —— `GET /api/usage?userId=hh_学号` 取清单，`POST /api/usage`（`{"userId":"…","paths":["…"]}`）取内容。不要去找 `scripts/` 下的工具或 `pnpm` 脚本。
+
+### 禁止
+
+- 伪造或借用别人的 `userId`
+- 忽略 blocking 意见反复硬传
+- 把诗人头像塞进 DLC zip
+- 请求不属于清单的 `path`，或把导出的对局数据再上传成 DLC
