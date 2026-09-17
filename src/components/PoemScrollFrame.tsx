@@ -19,6 +19,11 @@ type PoemScrollFrameProps = {
   onNext: () => void;
 };
 
+// 读词强制节奏：每进入一句锁定 N 秒，期间"下一句"按钮与空格键均不可用，避免连点。
+const READ_LOCK_SECONDS = 3;
+const RING_R = 10;
+const RING_C = 2 * Math.PI * RING_R;
+
 export function PoemScrollFrame({
   poet,
   workTitle,
@@ -29,12 +34,13 @@ export function PoemScrollFrame({
   onNext,
 }: PoemScrollFrameProps) {
   const currentRef = useRef<HTMLElement | null>(null);
-  // 读词强制节奏：每进入一句锁定 5 秒，期间"下一句"按钮与空格键均不可用，避免连点。
-  const [lockSeconds, setLockSeconds] = useState(5);
+  const [lockSeconds, setLockSeconds] = useState(READ_LOCK_SECONDS);
   const locked = lockSeconds > 0;
+  const ringRatio = READ_LOCK_SECONDS === 0 ? 0 : lockSeconds / READ_LOCK_SECONDS;
+  const ringOffset = RING_C * (1 - ringRatio);
 
   useEffect(() => {
-    setLockSeconds(5);
+    setLockSeconds(READ_LOCK_SECONDS);
   }, [lineIndex]);
 
   useEffect(() => {
@@ -143,7 +149,26 @@ export function PoemScrollFrame({
                 onNext();
               }}
             >
-              {locked ? `稍候 ${lockSeconds} 秒` : isLast ? "进入问答" : "下一句"}
+              {locked ? (
+                <>
+                  <svg className={styles.lockRing} viewBox="0 0 24 24" aria-hidden="true">
+                    <circle className={styles.lockRingTrack} cx="12" cy="12" r={RING_R} />
+                    <circle
+                      className={styles.lockRingBar}
+                      cx="12"
+                      cy="12"
+                      r={RING_R}
+                      strokeDasharray={RING_C}
+                      strokeDashoffset={ringOffset}
+                    />
+                  </svg>
+                  {isLast ? "进入问答" : "下一句"}
+                </>
+              ) : isLast ? (
+                "进入问答"
+              ) : (
+                "下一句"
+              )}
             </button>
           </div>
         </motion.article>
