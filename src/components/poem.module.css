@@ -68,6 +68,12 @@
   color: #f7efdc;
 }
 
+.primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: #2c2416;
+}
+
 .paper {
   flex: 1;
   overflow: auto;
