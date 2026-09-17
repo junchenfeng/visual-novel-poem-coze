@@ -36,7 +36,7 @@ export function PoemScrollFrame({
   const currentRef = useRef<HTMLElement | null>(null);
   const [lockSeconds, setLockSeconds] = useState(READ_LOCK_SECONDS);
   const locked = lockSeconds > 0;
-  const ringRatio = READ_LOCK_SECONDS === 0 ? 0 : lockSeconds / READ_LOCK_SECONDS;
+  const ringRatio = READ_LOCK_SECONDS <= 0 ? 0 : lockSeconds / READ_LOCK_SECONDS;
   const ringOffset = RING_C * (1 - ringRatio);
 
   useEffect(() => {
