@@ -3,8 +3,8 @@ import { buildCatalogPoets } from "../src/dlc/catalog";
 import { loadCompiledCatalog } from "../src/dlc/loadCompiled";
 import styles from "./page.module.css";
 
-export default function HomePage() {
-  const poets = buildCatalogPoets(loadCompiledCatalog());
+export default async function HomePage() {
+  const poets = buildCatalogPoets(await loadCompiledCatalog());
 
   return (
     <main className={styles.catalog}>
