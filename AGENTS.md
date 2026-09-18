@@ -119,6 +119,8 @@ pnpm test        # 运行 Jest 测试
 
 - 只向用户要两样：`userId`、DLC 目录（里面有 `manifest.yaml`）。**不要让用户自己打 zip**，也不要问 poetId / 诗人中文名 / 篇名 —— 从 `manifest.yaml` 读。不要向用户要 token。
 - 工具：`list_roster`（先看诗人与篇目）→ 诗人不在名册时 `upsert_poet`（正方形 png/jpg/webp，边长 512–1024px，≤2MB，传 `portraitBase64`）→ `ingest_dlc`（zip ≤30MB，传 `zipBase64`）。
+- **跳过课堂课包只认包 id `hailao-shuidiao`**（目录名或 `manifest.yaml` 的 `id` 是它才算），**不要按 `author` / 创作者判** —— 自己的包多半是照抄模板改出来的，`author` 很可能还写着「海狸老师」，那是自己的作品，要照传。
+- **范围只认本地 `dlc/` 下真实存在的包**：名册（`list_roster` / `GET /api/roster`）与对账（`list_my_dlc` / `GET /api/my-dlc`）只是查询参照，不是待办清单；本地 `dlc/` 里没有的作品，即使名册里已登记、线上已有，也不要去新建或补做，更不要提交、送审。
 - 打包排除 `.DS_Store`、`.git`、`node_modules`、`__MACOSX`。诗人头像是公共资源，**不要放进 zip**。
 - 审核 = 机器校验 + 对照 https://poem.aibeaver.cn/dlc-spec 的评审，可能要几分钟，别中途取消。
 - `verdict: accept` → 把返回的 `playUrl` 给用户，结束；`verdict: reject` → 按 `issues[].message` / `fixHint` 改 YAML，**你自己重新打包**再 `ingest_dlc`，不要让用户手动重压。
